@@ -1,8 +1,3 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron/results?secret=SUBSTITUA_PELO_SEU_CRON_SECRET",
-      "schedule": ""
-    }
-  ]
+  "crons": []
 }
