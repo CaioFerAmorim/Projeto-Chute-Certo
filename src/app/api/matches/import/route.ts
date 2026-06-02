@@ -6,7 +6,7 @@ const WC_API = 'https://worldcup26.ir'
 const FLAG_MAP: Record<string, string> = {
   'Mexico': '🇲🇽', 'South Africa': '🇿🇦', 'South Korea': '🇰🇷',
   'Canada': '🇨🇦', 'Switzerland': '🇨🇭', 'Qatar': '🇶🇦',
-  'Brazil': '🇧🇷', 'Morocco': '🇲🇦', 'Haiti': '🇭🇹', 'Scotland': '🏴',
+  'Brazil': '🇧🇷', 'Morocco': '🇲🇦', 'Haiti': '🇭🇹', 'Scotland': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
   'USA': '🇺🇸', 'Paraguay': '🇵🇾', 'Australia': '🇦🇺',
   'Germany': '🇩🇪', 'Curaçao': '🇨🇼', 'Ivory Coast': '🇨🇮', 'Ecuador': '🇪🇨',
   'Netherlands': '🇳🇱', 'Japan': '🇯🇵', 'Tunisia': '🇹🇳',

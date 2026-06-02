@@ -59,9 +59,7 @@ export default function LoginPage() {
   return (
     <div className="px-4 pb-8">
       <div className="pt-12 pb-8 text-center">
-        <div className="w-14 h-14 bg-green-400 rounded-full flex items-center justify-center mx-auto mb-3">
-          <span className="text-2xl">⚽</span>
-        </div>
+        <img src="/icone.png" alt="Chute Certo" className="w-14 h-14 rounded-full mx-auto mb-3" />
         <h1 className="text-2xl font-medium tracking-tight">Chute Certo</h1>
         <p className="text-sm text-gray-400 mt-1">Bolão da Copa com os amigos</p>
       </div>
