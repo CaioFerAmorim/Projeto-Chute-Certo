@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { Match, Bet, calcPoints, isLocked, fmtDate } from '@/types'
 import { createClient } from '@/lib/supabase-browser'
 
@@ -103,6 +102,10 @@ export default function ApostasList({ matches, group, bets, userId, onRefresh }:
   }
 
   const filteredMatches = matches.filter(m => {
+    if (m.home_name.startsWith('Winner') || m.home_name.startsWith('Runner') ||
+      m.home_name.startsWith('Loser') || m.home_name.startsWith('3rd') ||
+      m.away_name.startsWith('Winner') || m.away_name.startsWith('Runner') ||
+      m.away_name.startsWith('Loser') || m.away_name.startsWith('3rd')) return false
     const locked = isLocked(m.kickoff_at)
     const finished = m.status === 'finished' || m.result_home !== null
     const kick = new Date(m.kickoff_at)
@@ -118,6 +121,7 @@ export default function ApostasList({ matches, group, bets, userId, onRefresh }:
     if (filter === 'semana') return kick >= startOfWeek && kick <= endOfWeek
     return true
   })
+
   return (
     <div className="px-4 py-4">
       <div className="flex items-center justify-between mb-4">
@@ -164,8 +168,8 @@ export default function ApostasList({ matches, group, bets, userId, onRefresh }:
                   {finished
                     ? <span className="badge-done">encerrado</span>
                     : locked
-                      ? <span className="badge-locked">🔒 fechado</span>
-                      : <span className="badge-open">aberto</span>}
+                    ? <span className="badge-locked">🔒 fechado</span>
+                    : <span className="badge-open">aberto</span>}
                 </div>
               </div>
 
