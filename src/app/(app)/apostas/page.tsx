@@ -1,46 +1,37 @@
-import { createClient } from '@/lib/supabase-server'
+'use client'
+import { useEffect, useState, useCallback } from 'react'
+import { createClient } from '@/lib/supabase-browser'
 import ApostasList from './ApostasList'
 
-export const revalidate = 60
-
-export default async function ApostasPage() {
+export default function ApostasPage() {
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const [data, setData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
-  // Busca perfil, grupo ativo e jogos
-  const [{ data: profile }, { data: matches }] = await Promise.all([
-    supabase.from('profiles').select('*').eq('id', user!.id).single(),
-    supabase.from('matches').select('*').order('kickoff_at'),
-  ])
+  const load = useCallback(async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { window.location.href = '/login'; return }
 
-  // Grupo ativo do usuário (primeiro que está)
-  const { data: membership } = await supabase
-    .from('group_members')
-    .select('group_id, groups(*)')
-    .eq('user_id', user!.id)
-    .order('joined_at', { ascending: false })
-    .limit(1)
-    .maybeSingle()
+    const [{ data: matches }, { data: membership }] = await Promise.all([
+      supabase.from('matches').select('*').order('kickoff_at'),
+      supabase.from('group_members').select('group_id, groups(*)')
+        .eq('user_id', user.id).order('joined_at', { ascending: false }).limit(1).maybeSingle(),
+    ])
 
-  const group = membership?.groups as any ?? null
+    const group = (membership as any)?.groups ?? null
+    let bets: any[] = []
+    if (group) {
+      const { data: b } = await supabase.from('bets').select('*')
+        .eq('user_id', user.id).eq('group_id', group.id)
+      bets = b ?? []
+    }
 
-  // Apostas do usuário nesse grupo
-  let bets: any[] = []
-  if (group) {
-    const { data } = await supabase
-      .from('bets')
-      .select('*')
-      .eq('user_id', user!.id)
-      .eq('group_id', group.id)
-    bets = data ?? []
-  }
+    setData({ matches: matches ?? [], group, bets, userId: user.id })
+    setLoading(false)
+  }, [])
 
-  return (
-    <ApostasList
-      matches={matches ?? []}
-      group={group}
-      bets={bets}
-      userId={user!.id}
-    />
-  )
+  useEffect(() => { load() }, [])
+
+  if (loading) return <div className="flex items-center justify-center h-64 text-gray-400 text-sm">Carregando...</div>
+  return <ApostasList {...data} onRefresh={load} />
 }
